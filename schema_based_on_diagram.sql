@@ -23,6 +23,13 @@ CREATE TABLE invoices (
     medical_history_id INT UNIQUE REFERENCES medical_histories(id)
 );
 
+-- create treatments table
+CREATE TABLE treatments (
+    id SERIAL PRIMARY KEY,
+    type VARCHAR(255),
+    name VARCHAR(255)
+);
+
 -- create invoice_items table
 CREATE TABLE invoices_items (
     id SERIAL PRIMARY KEY,
@@ -30,15 +37,10 @@ CREATE TABLE invoices_items (
     quantity INT,
     total_price DECIMAL(10, 2),
     invoice_id INT REFERENCES invoices(id),
-    treatment_id INT REFERENCES treatment(id)
+    treatment_id INT REFERENCES treatments(id)
    
 );
--- create treatments table
-CREATE TABLE treatments (
-    id SERIAL PRIMARY KEY,
-    type VARCHAR(255),
-    name VARCHAR(255)
-);
+
 
 -- create join table 'treatment_histories'
 CREATE TABLE treatments_histories (
@@ -57,17 +59,17 @@ ON treatments_histories (medical_histories_id);
 CREATE INDEX idx_treatments_histories_treatment_id
 ON treatments_histories (treatment_id);
 
--- Create index for invoice_id in medical_histories table
-CREATE INDEX idx_medical_histories_invoice_id
-ON medical_histories (invoice_id);
-
--- Create index for medical_history_id in medical_histories table
-CREATE UNIQUE INDEX idx_medical_histories_medical_history_id
-ON medical_histories (medical_history_id);
+-- Create index for medical_history_id in invoices table
+CREATE UNIQUE INDEX idx_invoices_medical_history_id
+ON invoices (medical_history_id);
 
 -- Create index for patient_id in medical_histories table
 CREATE INDEX idx_medical_histories_patient_id
 ON medical_histories (patient_id);
+
+-- Create index for invoice_id in invoices_items table
+CREATE INDEX idx_invoices_items_invoice_id
+ON invoices_items (invoice_id);
 
 -- Create index for treatment_id in invoices_items table
 CREATE INDEX idx_invoices_items_treatment_id
